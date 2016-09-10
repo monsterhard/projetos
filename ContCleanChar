@@ -1,0 +1,47 @@
+#include<stdio.h>
+
+int cleanChar(char[],char);
+
+int main(){
+
+	char palavra[300],c;
+
+	printf("Informe a palavra: ");
+	scanf("%[^\n]s",palavra);
+
+	printf("Informe o char: ");
+
+	fflush(stdin);
+    c = getche();
+
+	printf("\n\n%d caracter(es) foi/foram apagado(s)\n",cleanChar(palavra,c));
+
+}
+
+int cleanChar(char palavra[], char c){
+
+int cont=0,i;
+
+
+   	for(i=0; i < palavra[i] != '\0'; i++){
+
+        if(palavra[i]== c){
+
+            palavra[i] = ' ';
+            cont++;
+        }
+
+	  }
+
+      printf("\n\n");
+
+	  for(i=0; i < palavra[i] != '\0'; i++){
+
+       printf("%c",palavra[i]);
+	  }
+
+
+
+return cont;
+
+}
