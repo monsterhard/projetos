@@ -1,0 +1,45 @@
+#include<stdio.h>
+
+
+/*
+1)	Escreva um programa que leia do usuário o nome de um arquivo de texto.
+    Em seguida, mostre na tela quantas linhas o arquivo possui. */
+
+int main()
+{
+
+    {
+        char url[]="cont.txt";
+        char ch;
+        FILE *arq;
+        int cont=0;
+
+        arq = fopen(url, "r");
+        if(arq == NULL)
+            printf("Erro, nao foi possivel abrir o arquivo\n");
+        else
+
+            while((ch=fgetc(arq))!= EOF )
+
+                if(ch == '\n')
+
+                    cont++;
+
+        if(cont == 0)
+
+            printf("O arquivo esta vazio!!");
+
+
+        fclose(arq);
+
+        if(cont!=0)
+        {
+
+            printf("Contem %d linha(s) no arquivo ",cont);
+        }
+
+
+
+        return 0;
+    }
+}
