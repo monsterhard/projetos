@@ -14,30 +14,38 @@ int main()
         FILE *arq;
         int cont=0;
 
-        arq = fopen(url, "r");
-        if(arq == NULL)
-            printf("Erro, nao foi possivel abrir o arquivo\n");
-        else
 
-            while((ch=fgetc(arq))!= EOF )
+        printf("Informe o nome do arquivo: ");
+        scanf("%[^\n]s",url);
+
+        arq = fopen(url, "r");
+
+        if(arq == NULL){
+
+            printf("Erro, nao foi possivel abrir o arquivo\n");
+        return 1;
+
+        }else{
+
+            while((ch=fgetc(arq))!= EOF ){
 
                 if(ch == '\n')
 
                     cont++;
+            }
 
-        if(cont == 0)
+        if(cont == 0){
 
             printf("O arquivo esta vazio!!");
 
 
-        fclose(arq);
+        }else{
 
-        if(cont!=0)
-        {
+              printf("Contem %d linha(s) no arquivo ",cont);
 
-            printf("Contem %d linha(s) no arquivo ",cont);
+          }
         }
-
+ fclose(arq);
 
 
         return 0;
