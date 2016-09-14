@@ -1,0 +1,71 @@
+#include<stdio.h>
+
+int main()
+{
+
+    char url1[]="first.txt";
+    char url2[]="second.txt";
+    char url3[]="new.txt";
+
+        char ch;
+        FILE *arq1;
+        FILE *arq2;
+        FILE *arq3;
+
+
+
+        printf("Informe o nome do arquivo 1: ");
+        scanf("%[^\n]s",url1);
+
+        arq1 = fopen(url1, "r");
+
+         if(arq1 == NULL){
+
+            printf("Arquivo 1 invalido, nao foi completa a operacao!!\n");
+
+            return 1;
+
+        }else{
+
+
+         fflush(stdin);
+
+        printf("Informe o nome do arquivo 2: ");
+        scanf("%[ ^\n]s",url2);
+
+         arq2 = fopen(url2, "r");
+
+        if(arq2 == NULL){
+
+             printf("Arquivo 2 invalido, nao foi completa a operacao!!\n");
+
+             return 1;
+
+        }else{
+
+
+            arq3 = fopen(url3, "w");
+
+
+            while((ch=fgetc(arq1))!= EOF ){
+
+                fprintf(arq3, "%c",ch);
+            }
+
+                arq3 = fopen(url3, "a+");
+
+               fprintf(arq3,"\n");
+
+              while((ch=fgetc(arq2))!= EOF ){
+
+                fprintf(arq3, "%c",ch);
+            }
+
+            printf("Arquivo %s gerado com sucesso! ",url3);
+
+        }
+        }
+
+        return 0;
+}
+
