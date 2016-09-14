@@ -1,0 +1,46 @@
+#include<stdio.h>
+
+int main()
+{
+
+    char url1[]="first.txt";
+    int cont=0;
+    char c;
+
+
+        char ch;
+        FILE *arq1;
+
+
+        printf("Informe o nome do arquivo 1: ");
+        scanf("%[^\n]s",url1);
+
+        arq1 = fopen(url1, "r");
+
+         if(arq1 == NULL){
+
+            printf("Arquivo 1 invalido, nao foi completa a operacao!!\n");
+
+            return 1;
+
+        }else{
+
+        fflush(stdin);
+
+        printf("Informe o caracter a ser lido: ");
+        c = getche();
+
+
+          while((ch=fgetc(arq1))!= EOF ){
+
+                   if(ch == c){
+
+                    cont++;
+
+                   }
+           }
+
+        }
+
+        printf("\n\nNo arquivo contem %d caracter(es) %c\n",cont,c);
+}
