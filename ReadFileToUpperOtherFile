@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+int main(){
+
+    char url1[]="first.txt";
+    char url2[30];
+        char ch;
+        FILE *arq1;
+        FILE *arq2;
+
+        printf("Informe o nome do arquivo a ser convertido: ");
+        scanf("%[^\n]s",url1);
+
+        arq1 = fopen(url1, "r");
+
+         if(arq1 == NULL){
+
+            printf("Arquivo invalido, nao foi completa a operacao!!\n");
+            return 1;
+
+        }else{
+
+            fflush(stdin);
+
+            printf("Informe o nome do arquivo a ser gravado: ");
+            scanf("%[^\n]s",url2);
+
+            arq2 = fopen(url2, "w");
+
+
+         if(arq2 == NULL){
+
+            printf("Arquivo invalido, nao foi completa a operacao!!\n");
+            return 1;
+
+         }else{
+
+
+             while((ch=fgetc(arq1))!= EOF ){
+
+                   ch = toupper(ch);
+
+                fprintf(arq2, "%c",ch);
+
+            }
+
+         }
+
+        }
+
+return 0;
+}
