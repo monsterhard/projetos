@@ -1,0 +1,179 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct
+{
+
+    int dia, mes, ano;
+
+} Data;
+
+
+typedef struct
+{
+
+    char nome[30];
+    float altura ;
+    Data nascimento;
+
+} Pessoa;
+
+int main()
+{
+    Pessoa povo[2];
+    Pessoa p;
+    int opcao, qtdPessoas = 0 ;
+    Data d;
+
+    ImprimeTelaDeOpcoes();
+
+    do
+    {
+        opcao = EscolheOpcao();
+
+        if (opcao == 1)
+        {
+
+            if(qtdPessoas < 2)
+            {
+
+                LePessoaDeTeclado(&p);
+
+                criaData(&d);
+
+                AdicionaPessoa(povo, &p, qtdPessoas);
+
+                qtdPessoas++;
+
+            }
+            else
+            {
+                printf("\n\tLIMITE EXCEDIDO!!\n");
+            }
+        }
+
+        if (opcao == 2)
+        {
+            ImprimeTodasAsPessoas(povo, qtdPessoas);
+        }
+        if (opcao == 3)
+        {
+            LeDataDeTeclado(&d);
+            ImprimeMaisVelhos(povo, qtdPessoas, &d);
+
+        }
+    }
+    while (opcao != 4);
+}
+
+void ImprimeTelaDeOpcoes()
+{
+
+    printf("\n\t1-Inserir Nome\n");
+    printf("\t2-Listar Nomes e respectivas Alturas\n");
+    printf("\t3-Listar Nome das pessoas que nasceram antes de uma data fornecida\n");
+    printf("\t4-Sair\n");
+
+}
+
+int EscolheOpcao()
+{
+    int op;
+
+    printf("\n\tOpcao: ");
+    scanf("%d",&op);
+
+    return op;
+}
+
+void LePessoaDeTeclado(Pessoa *p)
+{
+
+
+    fflush(stdin);
+
+    printf("\n\tInforme o Nome: ");
+    gets ((*p).nome);
+
+    printf("\tInforme a Altura: ");
+    scanf("%f",&(*p).altura);
+
+   // printf("\tInforme a Data de nascimento: ");
+   // scanf("%d %d %d",&(*p).nascimento.dia,&(*p).nascimento.mes,&(*p).nascimento.ano);
+
+    /* (*p).nascimento.dia;
+     (*p).nascimento.mes;
+     (*p).nascimento.ano;*/
+}
+
+void criaData(Data *d)
+{
+
+    (*d).mes = 1 + (rand() % 12);
+    (*d).ano = 1950 + (rand() % 49);
+    (*d).dia = 1 + (rand() % 30);
+
+     printf("\tNascimento: %d %d %d\n",(*d).dia,(*d).mes,(*d).ano);
+
+}
+
+void LeDataDeTeclado(Data *d)  //informar uma data qualquer
+{
+
+    printf("\n\tInforme a Data: ");
+    scanf("%d %d %d",&(*d).dia,&(*d).mes,&(*d).ano);
+
+}
+
+void AdicionaPessoa(Pessoa povo[], Pessoa *p, int qtdPessoas)
+{
+    povo[qtdPessoas] = *p;
+
+    printf("\n\n\tAdicionado com sucesso!!\n\n");
+}
+
+void ImprimeMaisVelhos(Pessoa povo[], int qtdPessoas, Data *d)  //imprime as datas anteriores a informada
+{
+
+    int i=0;
+
+    Data (*d_aux) = (*d).dia;
+    Data (*m_aux) = (*d).mes;
+    Data (*a_aux) = (*d).ano;
+
+    for(i=0; i < qtdPessoas; i++)
+    {
+
+        if(a_aux > povo[i].nascimento.ano || d_aux > povo[i].nascimento.dia || m_aux > povo[i].nascimento.mes)
+        {
+
+            printf("\n\tNome: %s",povo[i].nome);
+            printf("\n\tAltura: %.2f ",povo[i].altura);
+            printf("\n\tNascimento: %d %d %d\n",povo[i].nascimento.dia, povo[i].nascimento.mes, povo[i].nascimento.ano);
+
+        }
+    }
+}
+
+void ImprimeTodasAsPessoas(Pessoa povo[],int qtdPessoas)
+{
+
+    int i =0;
+
+    for(i=0; i < qtdPessoas; i++)
+    {
+
+        printf("\n\tNome: %s",povo[i].nome);
+        printf("\n\tAltura: %.2f",povo[i].altura);
+        printf("\n\tNascimento: %d %d %d\n",povo[i].nascimento.dia, povo[i].nascimento.mes, povo[i].nascimento.ano);
+
+
+    }
+}
+
+
+
+
+
