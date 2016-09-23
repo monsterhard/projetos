@@ -39,9 +39,9 @@ int main()
             if(qtdPessoas < 2)
             {
 
-                LePessoaDeTeclado(&p);
+                //criaData(&d);
 
-                criaData(&d);
+                LePessoaDeTeclado(&p,&d);
 
                 AdicionaPessoa(povo, &p, qtdPessoas);
 
@@ -88,9 +88,8 @@ int EscolheOpcao()
     return op;
 }
 
-void LePessoaDeTeclado(Pessoa *p)
+void LePessoaDeTeclado(Pessoa *p,Data *d)
 {
-
 
     fflush(stdin);
 
@@ -100,24 +99,19 @@ void LePessoaDeTeclado(Pessoa *p)
     printf("\tInforme a Altura: ");
     scanf("%f",&(*p).altura);
 
-   // printf("\tInforme a Data de nascimento: ");
-   // scanf("%d %d %d",&(*p).nascimento.dia,&(*p).nascimento.mes,&(*p).nascimento.ano);
+    (*p).nascimento.dia = 1 + (rand() % 30);
+    (*p).nascimento.mes = 1 + (rand() % 12);
+    (*p).nascimento.ano = 1950 + (rand() % 49);
 
-    /* (*p).nascimento.dia;
-     (*p).nascimento.mes;
-     (*p).nascimento.ano;*/
 }
 
-void criaData(Data *d)
+
+/*void criaData(Data &d)
 {
-
-    (*d).mes = 1 + (rand() % 12);
-    (*d).ano = 1950 + (rand() % 49);
-    (*d).dia = 1 + (rand() % 30);
-
-     printf("\tNascimento: %d %d %d\n",(*d).dia,(*d).mes,(*d).ano);
-
-}
+   d.mes = 1 + (rand() % 12);
+   d.ano = 1950 + (rand() % 49);
+   d.dia = 1 + (rand() % 30);
+}*/
 
 void LeDataDeTeclado(Data *d)  //informar uma data qualquer
 {
