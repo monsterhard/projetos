@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+
+    char url1[]="palavra.txt";
+    int cont=0;
+    FILE *arq1;
+
+
+    printf("Informe o nome do arquivo 1: ");
+    scanf("%[^\n]s",url1);
+
+    arq1 = fopen(url1, "r");
+
+    if(arq1 == NULL)
+    {
+
+        printf("Arquivo 1 invalido, nao foi completa a operacao!!\n");
+
+        return 1;
+
+    }
+    else
+    {
+
+        char palavra[40],vet[40];
+        int i=0;
+
+        while((fgets(palavra, sizeof(palavra), arq1))!=NULL)
+        {
+            vet[i] = strlen(palavra);
+           i++;
+           cont=i;
+        }
+
+        int numero_min;
+        numero_min = vet[0];
+
+         for( i = 0; i < cont; i++ )
+        {
+            if(vet[i] < numero_min){
+             numero_min = vet[i];
+            }
+        }
+
+        printf("%d",numero_min);
+
+    }
+}
