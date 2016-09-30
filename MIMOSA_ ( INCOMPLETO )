@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+typedef struct{
+
+  int mes,ano;
+
+
+} Nascimento;
+
+typedef struct {
+
+    int codigo;
+    int qtdLeite;
+    int qtdAlim
+    char abate;
+    Nascimento nasc;
+
+}Gado;
+
+
+int main (){
+
+
+
+
+return 0;
+}
