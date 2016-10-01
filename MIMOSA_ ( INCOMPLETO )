@@ -1,27 +1,81 @@
 #include<stdio.h>
 
-typedef struct{
+typedef struct
+{
 
-  int mes,ano;
-
+    int mes,ano;
 
 } Nascimento;
 
-typedef struct {
+typedef struct
+{
 
     int codigo;
     int qtdLeite;
-    int qtdAlim
+    int qtdAlim;
     char abate;
     Nascimento nasc;
 
-}Gado;
+} Gado;
+
+int main ()
+{
+
+    Gado gados[200];
+    Gado g;
+    int opcao,qtdGados=0;
+    Nascimento n;
+
+    ImprimeTelaDeOpcoes();
+
+    do
+    {
+        opcao = EscolheOpcao();
+
+        if (opcao == 1)
+        {
+
+            if(qtdGados < 2)
+            {
 
 
-int main (){
+            }
+            else
+            {
+                printf("\n\tLIMITE EXCEDIDO!!\n");
+            }
+        }
+
+        if (opcao == 2)
+        {
 
 
+        }
+        if (opcao == 3)
+        {
 
+
+        }
+    }
+    while (opcao != 4);
 
 return 0;
+}
+
+
+void ImprimeTelaDeOpcoes()
+{
+
+
+
+}
+
+int EscolheOpcao()
+{
+    int op;
+
+    printf("\n\tOpcao: ");
+    scanf("%d",&op);
+
+    return op;
 }
