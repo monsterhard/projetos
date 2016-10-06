@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdbool.h>
-
+#define TAM 9
 typedef struct
 {
     int mes,ano;
@@ -22,7 +22,7 @@ typedef struct
 int main ()
 {
 
-    Gado gados[200];
+    Gado gados[TAM];
     Gado g;
     int opcao,qtdGados=0;
     Nascimento n;
@@ -63,13 +63,8 @@ int main ()
 
         case 6:
 
-            if(qtdGados < 4)
-            {
+            incluirGados(&arq,&g,gados,qtdGados);
 
-                incluirGados(&arq,&g,gados,qtdGados,cont);
-                qtdGados++;
-                cont++;
-            }
 
             break;
 
@@ -115,7 +110,6 @@ int EscolheOpcao()
 void carregarArquivos(FILE *arq, Gado gados[])
 {
 
-    int result=0,i;
 
 
     arq = fopen("Gados.dat", "rb");
@@ -126,38 +120,26 @@ void carregarArquivos(FILE *arq, Gado gados[])
         printf("\n\tErro ao Abrir!!\n");
         return;
     }
+    int result =0;
 
-    result = fread(&gados[0],sizeof(Gado),200,arq);
+    fflush(stdin);
 
+    result = fread(&gados[0],sizeof(Gado),TAM,arq);
+    printf("%d",result);
+    int i=0;
     if(result > 0)
     {
 
         printf("\n\tLista de Gados\n");
-        int vet[result];
-        int codigo;
-
-        printf("\n\tCodigo: %d ",gados[0].codigo);
-        printf("\n\tQuantidade de Leite: %d ",gados[0].qtdLeite);
-        printf("\n\tQuantidade de Alimento: %d ",gados[0].qtdAlim);
-        printf("\n\tData de nascimento: %d/%d\n",gados[0].nasc.mes,gados[i].nasc.ano);
-
-        codigo = gados[0].codigo;
-
 
         for(i=0; i < result; i++)
         {
 
-            if(codigo != gados[i].codigo)
-            {
+            printf("\n\tCodigo: %d ",gados[i].codigo);
+            printf("\n\tQuantidade de Leite: %d ",gados[i].qtdLeite);
+            printf("\n\tQuantidade de Alimento: %d ",gados[i].qtdAlim);
+            printf("\n\tData de nascimento: %d/%d\n",gados[i].nasc.mes,gados[i].nasc.ano);
 
-
-                printf("\n\tCodigo: %d ",gados[i].codigo);
-                printf("\n\tQuantidade de Leite: %d ",gados[i].qtdLeite);
-                printf("\n\tQuantidade de Alimento: %d ",gados[i].qtdAlim);
-                printf("\n\tData de nascimento: %d/%d\n",gados[i].nasc.mes,gados[i].nasc.ano);
-
-
-            }
 
         }
 
@@ -168,13 +150,20 @@ void carregarArquivos(FILE *arq, Gado gados[])
         printf("\n\tNao ha registros\n");
     }
 
+
+
+
+
+
+
+
 }
 
 
-void incluirGados(FILE *arq, Gado *g,Gado gados[],int qtd,int cont)
+void incluirGados(FILE *arq, Gado *g,Gado gados[],int qtd)
 {
 
-    arq = fopen("Gados.dat", "ab+");
+    arq = fopen("Gados.txt", "a+");
 
     if(arq == NULL)
     {
@@ -182,25 +171,25 @@ void incluirGados(FILE *arq, Gado *g,Gado gados[],int qtd,int cont)
         printf("\n\tErro ao Gravar\n");
 
     }
+    char ch;
+    int cont=0;
+
+    fseek(arq, 0, SEEK_SET);
+
+    while((ch=fgetc(arq))!= EOF )
+    {
+        if(ch == '\n')
+
+            cont++;
+    }
+
+    if(cont > TAM){
+
+        return 1;
+    }
 
     printf("\n\tInforme o codigo: ");
     scanf("%d",&(*g).codigo);
-
-    int result =0,i=0;
-
-    result = fread(&gados[0].codigo,sizeof(Gado),200,arq);
-
-    for(i=0; i < result; i++)
-    {
-
-        while(gados[i].codigo == (*g).codigo )
-        {
-
-            printf("\n\tInforme o codigo novamente: ");
-            scanf("%d",&(*g).codigo);
-
-        }
-    }
 
     printf("\tInforme a quantidade de Leite: ");
     scanf("%d",&(*g).qtdLeite);
@@ -213,9 +202,22 @@ void incluirGados(FILE *arq, Gado *g,Gado gados[],int qtd,int cont)
 
     gados[qtd] = *g;
 
-    fwrite(&gados[0], sizeof(Gado),cont,arq);
+    //int result =0;
+    fwrite(&gados[0], sizeof(Gado),5,arq);
+
+    // cont++;
+    /*int i;
+         for(i=0;i < result;i++){
+
+                 printf("\n\tCodigo: %d ",gados[i].codigo);
+                 printf("\n\tQuantidade de Leite: %d ",gados[i].qtdLeite);
+                 printf("\n\tQuantidade de Alimento: %d ",gados[i].qtdAlim);
+                 printf("\n\tData de nascimento: %d/%d\n",gados[i].nasc.mes,gados[i].nasc.ano);
+
+
+
+         }*/
 
     fclose(arq);
 
 }
-
