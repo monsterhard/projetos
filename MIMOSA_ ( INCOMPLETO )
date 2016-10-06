@@ -1,8 +1,9 @@
 #include<stdio.h>
+#include<string.h>
+#include<stdbool.h>
 
 typedef struct
 {
-
     int mes,ano;
 
 } Nascimento;
@@ -25,6 +26,8 @@ int main ()
     Gado g;
     int opcao,qtdGados=0;
     Nascimento n;
+    FILE *arq;
+    int cont =1;
 
     ImprimeTelaDeOpcoes();
 
@@ -32,41 +35,69 @@ int main ()
     {
         opcao = EscolheOpcao();
 
-        if (opcao == 1)
+        switch (opcao)
         {
 
-            if(qtdGados < 2)
+
+        case 1:
+
+            carregarArquivos(&arq,gados);
+
+            break;
+
+        case 2:
+
+            break;
+
+        case 3:
+
+            break;
+
+        case 4:
+
+            break;
+
+        case 5:
+
+            break;
+
+        case 6:
+
+            if(qtdGados < 4)
             {
 
-
+                incluirGados(&arq,&g,gados,qtdGados,cont);
+                qtdGados++;
+                cont++;
             }
-            else
-            {
-                printf("\n\tLIMITE EXCEDIDO!!\n");
-            }
-        }
 
-        if (opcao == 2)
-        {
+            break;
 
+
+        case 7:
+
+            break;
 
         }
-        if (opcao == 3)
-        {
 
-
-        }
     }
-    while (opcao != 4);
+    while (opcao != 8);
 
-return 0;
+    return 0;
 }
 
 
 void ImprimeTelaDeOpcoes()
 {
 
-
+    printf("\n\t1-Carregar dados do Arquivo\n");
+    printf("\t2-Exibir a quantidade total de leite produzido por semana\n");
+    printf("\t3-Exibir a quantidade total de alimento consumido por semana\n");
+    printf("\t4-Exibir a quantidade total de leite que vai ser produzido por semana na fazenda, após o abate \n");
+    printf("\t5-Exibir o número de cabecas de gado que irao para o abate \n");
+    printf("\t6-Incluir novo registro\n");
+    printf("\t7-Listar registros\n");
+    printf("\t8-Sair\n");
 
 }
 
@@ -79,3 +110,112 @@ int EscolheOpcao()
 
     return op;
 }
+
+
+void carregarArquivos(FILE *arq, Gado gados[])
+{
+
+    int result=0,i;
+
+
+    arq = fopen("Gados.dat", "rb");
+
+    if(arq == NULL)
+    {
+
+        printf("\n\tErro ao Abrir!!\n");
+        return;
+    }
+
+    result = fread(&gados[0],sizeof(Gado),200,arq);
+
+    if(result > 0)
+    {
+
+        printf("\n\tLista de Gados\n");
+        int vet[result];
+        int codigo;
+
+        printf("\n\tCodigo: %d ",gados[0].codigo);
+        printf("\n\tQuantidade de Leite: %d ",gados[0].qtdLeite);
+        printf("\n\tQuantidade de Alimento: %d ",gados[0].qtdAlim);
+        printf("\n\tData de nascimento: %d/%d\n",gados[0].nasc.mes,gados[i].nasc.ano);
+
+        codigo = gados[0].codigo;
+
+
+        for(i=0; i < result; i++)
+        {
+
+            if(codigo != gados[i].codigo)
+            {
+
+
+                printf("\n\tCodigo: %d ",gados[i].codigo);
+                printf("\n\tQuantidade de Leite: %d ",gados[i].qtdLeite);
+                printf("\n\tQuantidade de Alimento: %d ",gados[i].qtdAlim);
+                printf("\n\tData de nascimento: %d/%d\n",gados[i].nasc.mes,gados[i].nasc.ano);
+
+
+            }
+
+        }
+
+    }
+    else
+    {
+
+        printf("\n\tNao ha registros\n");
+    }
+
+}
+
+
+void incluirGados(FILE *arq, Gado *g,Gado gados[],int qtd,int cont)
+{
+
+    arq = fopen("Gados.dat", "ab+");
+
+    if(arq == NULL)
+    {
+
+        printf("\n\tErro ao Gravar\n");
+
+    }
+
+    printf("\n\tInforme o codigo: ");
+    scanf("%d",&(*g).codigo);
+
+    int result =0,i=0;
+
+    result = fread(&gados[0].codigo,sizeof(Gado),200,arq);
+
+    for(i=0; i < result; i++)
+    {
+
+        while(gados[i].codigo == (*g).codigo )
+        {
+
+            printf("\n\tInforme o codigo novamente: ");
+            scanf("%d",&(*g).codigo);
+
+        }
+    }
+
+    printf("\tInforme a quantidade de Leite: ");
+    scanf("%d",&(*g).qtdLeite);
+
+    printf("\tInforme a quantidade de Alimento: ");
+    scanf("%d",&(*g).qtdAlim);
+
+    printf("\tInforme a data de nascimento: ");
+    scanf("%d %d",&(*g).nasc.mes, &(*g).nasc.ano );
+
+    gados[qtd] = *g;
+
+    fwrite(&gados[0], sizeof(Gado),cont,arq);
+
+    fclose(arq);
+
+}
+
