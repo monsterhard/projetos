@@ -1,119 +1,64 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#define TAM 4
+#include <stdio.h>
+#include <stdlib.h>
 
+#define NOMEARQUIVO "ficha_gados.bin"
 
-/*
+struct data{
 
-2.	Devolver a quantidade total de leite produzida por semana na fazenda.
-3.	Devolver a quantidade total de alimento consumido por semana na fazenda.
-4.	Devolver a quantidade total de leite que vai ser produzido por semana na fazenda, após o abate
-5.	Devolver número de cabeças de gado que irão para o abate.
+   int mes,ano;
 
+};
 
+struct ficha_gado{
 
-
-*/
-
-
-typedef struct
-{
-    int mes,ano;
-
-} Nascimento;
-
-typedef struct
-{
-
-    int codigo;
-    int qtdLeite;
-    int qtdAlim;
+    int cod;
+    float qtde_litros;
+    float qtde_alimento;
+    struct data data_nasc;
     char abate;
-    Nascimento nasc;
 
-} Gado;
+};
 
-int main ()
+struct ficha_gado gados[3];
+
+//secao de prototipos
+int load_file(void);
+int insert(void);
+FILE * fileOpen(char nome[],char modo[]);
+
+
+int main()
 {
-
-    Gado g;
-    int opcao;
-    Nascimento n;
-    FILE *arq;
+    char op;
 
 
     ImprimeTelaDeOpcoes();
 
-    do
-    {
-        opcao = EscolheOpcao();
 
-        switch (opcao)
-        {
+    do{
+        printf("\n\tOpcao: ");
+        op = getch();
 
-        case 1:
+        switch(op){
 
-            if(carregarArquivos(&arq)== 0)
-            {
+        case '6':
 
-                printf("\n\tNao ha Gados!!\n");
-            }
+            insert();
 
             break;
+        case '1':
 
-        case 2:
-
-            imprimeQtdLeitePorSemana(&arq,&g);
-
+            load_file();
             break;
-
-        case 3:
-
-            imprimeQtdAlimentoPorSemana(&arq,&g);
-
-            break;
-
-        case 4:
-
-            imprimeQtdLeitePosAbate(&arq,&g);
-
-            break;
-
-        case 5:
-
-            imprimeNumeroCabecasPosAbate(&arq,&g);
-
-            break;
-
-        case 6:
-
-            if (incluirGados(&arq,&g)==1){
-
-                printf("\n\tLimite excedido!!\n");
-
-            }else{
-
-                printf("\n\tCadastrado com sucesso!!\n");
-            }
-
-            break;
-
-
-        case 7:
-
-            //Listar???
-
-            break;
-
         }
 
-    }
-    while (opcao != 8);
+
+    }while(op != '8');
+
+
 
     return 0;
 }
-
 
 void ImprimeTelaDeOpcoes()
 {
@@ -129,174 +74,75 @@ void ImprimeTelaDeOpcoes()
 
 }
 
-int EscolheOpcao()
-{
-    int op;
 
-    printf("\n\tOpcao: ");
-    scanf("%d",&op);
+int insert(){
 
-    return op;
+
+    FILE *file = fileOpen(NOMEARQUIVO,"ab");
+
+    printf("\n\n\tCodigo: ");
+    scanf("%d",&gados[0].cod);
+    printf("\tLitros: ");
+    scanf("%f",&gados[0].qtde_litros);
+    printf("\tAlimentacao (kg): ");
+    scanf("%f",&gados[0].qtde_alimento);
+    printf("\tNascimento (mes/ano): ");
+    scanf("%d",&gados[0].data_nasc.mes);
+    scanf("%d",&gados[0].data_nasc.ano);
+
+    int meses=12 * 2016 + 10,idade;
+    idade =  meses - (gados[0].data_nasc.mes + gados[0].data_nasc.ano * 12) ;
+
+
+    if( idade > 5*12 || gados[0].qtde_litros < 40 || (gados[0].qtde_litros >= 50 && gados[0].qtde_litros <= 70 && gados[0].qtde_alimento > 50) ){
+
+       gados[0].abate = 'S';
+
+    }else{
+
+       gados[0].abate = 'N';
+
+    }
+
+     fwrite(&gados[0],sizeof(struct ficha_gado),1,file);
+
+    fclose(file);
+
 }
 
+int load_file(){
 
-int carregarArquivos(FILE *arq)
-{
+    int result=0,i;
 
-    int totalCadastrados=0;
-    char ch;
-    int i;
-
-    arq = fopen("Gados.txt", "r");
-
-    if(arq == NULL)
-    {
-
-        printf("\n\tErro ao Abrir!!\n");
-        return;
-    }
-
-    while((ch=fgetc(arq))!= EOF )
-    {
-
-      if(ch == '\n')
-
-         totalCadastrados++;
-    }
-
-    fseek(arq,0, SEEK_SET);
-
-    if(totalCadastrados > 0)
-    {
-
-        while((ch=fgetc(arq))!= EOF )
-        {
-
-            printf("%c",ch);
-
-        }
-        return 1;
-    }
-
-    fclose(arq);
-
-    return 0;
-}
+    FILE *file = fileOpen(NOMEARQUIVO,"rb");
 
 
-int incluirGados(FILE *arq, Gado *g)
-{
-    int totalCadastrados =0,totalAnos=0,i;
-    char ch;
+    result = fread(&gados[0],sizeof(struct ficha_gado),3,file);
 
+    printf("%d",result);
 
-    arq = fopen("Gados.txt", "a+");
+    for(i=0; i < result;i++){
 
-    if(arq == NULL)
-    {
-        printf("\n\tErro ao Gravar\n");
-    }
-
-    while((ch=fgetc(arq))!= EOF )
-    {
-
-      if(ch == '\n')
-
-         totalCadastrados++;
-    }
-
-
-    if(totalCadastrados == (TAM*5))
-    {
-
-        return 1;
+    printf("\n\n\tCodigo: %d ",gados[i].cod);
+    printf("\n\tLitros: %.2f",gados[i].qtde_litros);
+    printf("\n\tAlimento: %.2f",gados[i].qtde_alimento);
+    printf("\n\tAbate: %c",gados[i].abate);
+    printf("\n\tData de Nascimento: %d %d\n",gados[i].data_nasc.mes, gados[i].data_nasc.ano);
 
     }
 
-    printf("\n\tInforme o codigo: ");
-    scanf("%d",&(*g).codigo);
-
-    printf("\tInforme o litro de Leite /Semana: ");
-    scanf("%d",&(*g).qtdLeite);
-
-    printf("\tInforme a quantidade KG de Alimento /Semana: ");
-    scanf("%d",&(*g).qtdAlim);
-
-    printf("\tInforme a data de nascimento MM/AAAA: ");
-    scanf("%d %d",&(*g).nasc.mes, &(*g).nasc.ano );
-
-
-    totalAnos = (2016 - (*g).nasc.ano);
-
-      if(totalAnos > 5 || (*g).qtdLeite < 40 || ( (*g).qtdLeite >=50 || (*g).qtdLeite <=70 && (*g).qtdAlim > 50 ) ){
-
-        (*g).abate = 's';
-
-      }else{
-
-        (*g).abate = 'n';
-
-      }
-
-    for(i=0; i < 1; i++)
-    {
-
-        fprintf(arq,"\n\tCodigo: %d ",(*g).codigo);
-        fprintf(arq,"\n\tQuantidade de Leite: %d ",(*g).qtdLeite);
-        fprintf(arq,"\n\tQuantidade de Alimento: %d ",(*g).qtdAlim);
-        fprintf(arq,"\n\tAbate: %c ",(*g).abate);
-        fprintf(arq,"\n\tData de nascimento: %d/%d\n",(*g).nasc.mes, (*g).nasc.ano);
-
-    }
-
-    fclose(arq);
-}
-
-int imprimeQtdLeitePorSemana(FILE *arq, Gado *g){
-
-
-char gados[TAM];
-int i=0;
-    arq = fopen("Gados.txt", "r");
-
-    if(arq == NULL)
-    {
-
-        printf("\n\tErro ao Abrir!!\n");
-        return;
-    }
-
-        while((fgets(gados, sizeof(int), arq))!=NULL)
-        {
-
-                gados[i] = (*g).codigo;
-                printf("%d",gados[i]);
-
-                    i++;
-        }
-
-fclose(arq);
-
-
+fclose(file);
 
 }
 
 
-int imprimeQtdAlimentoPorSemana(FILE *arq, Gado *g){
 
-
-
-
+FILE* fileOpen(char nome[],char modo[]){
+    FILE *fp;
+    if((fp = fopen(nome,modo)) == NULL){
+        printf("Erro ao abrir o arquivo <%s>",nome);
+        exit(1);
+    }
+    return fp;
 }
 
-int imprimeQtdLeitePosAbate(FILE *arq, Gado *g){
-
-
-
-
-}
-
-int imprimeNumeroCabecasPosAbate(FILE *arq, Gado *g){
-
-
-}
