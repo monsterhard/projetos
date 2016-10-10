@@ -2,14 +2,16 @@
 #include <stdlib.h>
 
 #define NOMEARQUIVO "ficha_gados.bin"
+#define TAM 3
+struct data
+{
 
-struct data{
-
-   int mes,ano;
+    int mes,ano;
 
 };
 
-struct ficha_gado{
+struct ficha_gado
+{
 
     int cod;
     float qtde_litros;
@@ -19,11 +21,16 @@ struct ficha_gado{
 
 };
 
-struct ficha_gado gados[3];
+struct ficha_gado gados[TAM];
 
 //secao de prototipos
 int load_file(void);
 int insert(void);
+float print_milk_per_week(void);
+float print_food_per_week(void);
+float print_milk_after_abate(void);
+float print_number_heads_after_abate(void);
+
 FILE * fileOpen(char nome[],char modo[]);
 
 
@@ -35,25 +42,66 @@ int main()
     ImprimeTelaDeOpcoes();
 
 
-    do{
+    do
+    {
         printf("\n\tOpcao: ");
         op = getch();
 
-        switch(op){
+        switch(op)
+        {
 
         case '6':
 
-            insert();
+
+            if (insert()==0){
+
+                printf("\n\tCadastrado com sucesso!!\n");
+
+            }else{
+
+
+                printf("\n\tLista cheia!!\n");
+            }
+
+
 
             break;
         case '1':
 
             load_file();
+
             break;
+
+        case '2':
+
+            printf("Foram produzidos %.2f litro(s) de leite",print_milk_per_week());
+
+            break;
+
+        case '3':
+
+            printf("Foram consumido %.2f kilo(s) de comida",print_food_per_week());
+
+            break;
+
+        case '4':
+
+            if(print_milk_after_abate()>0){
+
+                printf("Foram produzidos %.2f litro(s) de leite pos abate",print_milk_after_abate());
+
+            }else{
+
+
+                printf("Nada produzido ate o momento!!",print_milk_after_abate());
+            }
+            break;
+
         }
 
 
-    }while(op != '8');
+    }
+    while(op != '8');
 
 
 
@@ -75,10 +123,17 @@ void ImprimeTelaDeOpcoes()
 }
 
 
-int insert(){
+int insert()
+{
 
 
     FILE *file = fileOpen(NOMEARQUIVO,"ab");
+
+     int r;
+
+    r = list_cadastros();
+
+    if(r < TAM){
 
     printf("\n\n\tCodigo: ");
     scanf("%d",&gados[0].cod);
@@ -91,58 +146,138 @@ int insert(){
     scanf("%d",&gados[0].data_nasc.ano);
 
     int meses=12 * 2016 + 10,idade;
+
     idade =  meses - (gados[0].data_nasc.mes + gados[0].data_nasc.ano * 12) ;
 
 
-    if( idade > 5*12 || gados[0].qtde_litros < 40 || (gados[0].qtde_litros >= 50 && gados[0].qtde_litros <= 70 && gados[0].qtde_alimento > 50) ){
+    if( idade > 5*12 || gados[0].qtde_litros < 40 || (gados[0].qtde_litros >= 50 && gados[0].qtde_litros <= 70 && gados[0].qtde_alimento > 50) )
+    {
 
-       gados[0].abate = 'S';
+        gados[0].abate = 'S';
 
-    }else{
+    }
+    else
+    {
 
-       gados[0].abate = 'N';
+        gados[0].abate = 'N';
 
     }
 
      fwrite(&gados[0],sizeof(struct ficha_gado),1,file);
 
     fclose(file);
+     return 0;
+
+     }
+
+fclose(file);
+return 1;
+
 
 }
 
-int load_file(){
+int load_file()
+{
 
-    int result=0,i;
+    int i;
 
-    FILE *file = fileOpen(NOMEARQUIVO,"rb");
+      for(i=0; i < list_cadastros(); i++)
+    {
 
-
-    result = fread(&gados[0],sizeof(struct ficha_gado),3,file);
-
-    printf("%d",result);
-
-    for(i=0; i < result;i++){
-
-    printf("\n\n\tCodigo: %d ",gados[i].cod);
-    printf("\n\tLitros: %.2f",gados[i].qtde_litros);
-    printf("\n\tAlimento: %.2f",gados[i].qtde_alimento);
-    printf("\n\tAbate: %c",gados[i].abate);
-    printf("\n\tData de Nascimento: %d %d\n",gados[i].data_nasc.mes, gados[i].data_nasc.ano);
+        printf("\n\n\tCodigo: %d ",gados[i].cod);
+        printf("\n\tLitros: %.2f",gados[i].qtde_litros);
+        printf("\n\tAlimento: %.2f",gados[i].qtde_alimento);
+        printf("\n\tAbate: %c",gados[i].abate);
+        printf("\n\tData de Nascimento: %d %d\n",gados[i].data_nasc.mes, gados[i].data_nasc.ano);
 
     }
 
-fclose(file);
+}
+
+float print_milk_per_week()
+{
+
+    int i;
+    float totalLitros=0;
+
+     for(i=0; i < list_cadastros(); i++)
+    {
+
+        if(gados[i].qtde_litros > 0)
+        {
+
+            totalLitros += gados[i].qtde_litros;
+        }
+    }
+
+    return totalLitros;
+}
+
+float print_food_per_week()
+{
+
+    int i;
+    float totalAlimentos=0;
+
+
+    for(i=0; i < list_cadastros(); i++)
+    {
+
+        if(gados[i].qtde_alimento > 0)
+        {
+
+            totalAlimentos += gados[i].qtde_alimento;
+        }
+    }
+
+    return totalAlimentos;
 
 }
 
+float print_milk_after_abate()
+{
+    int i;
+    float totalLitros=0;
 
 
-FILE* fileOpen(char nome[],char modo[]){
+    for(i=0; i < list_cadastros(); i++)
+    {
+
+        if(gados[i].qtde_litros > 0 && gados[i].abate == 'S')
+        {
+
+            totalLitros += gados[i].qtde_litros;
+        }
+    }
+
+    return totalLitros;
+
+}
+
+float print_number_heads_after_abate()
+{
+
+
+}
+
+FILE* fileOpen(char nome[],char modo[])
+{
     FILE *fp;
-    if((fp = fopen(nome,modo)) == NULL){
-        printf("Erro ao abrir o arquivo <%s>",nome);
+    if((fp = fopen(nome,modo)) == NULL)
+    {
+        printf("\n\tErro ao abrir o arquivo <%s>",nome);
         exit(1);
     }
     return fp;
 }
 
+
+int list_cadastros(){
+
+    int result;
+
+    FILE *file = fileOpen(NOMEARQUIVO,"rb");
+
+   return  result = fread(&gados[0],sizeof(struct ficha_gado),TAM,file);
+
+}
