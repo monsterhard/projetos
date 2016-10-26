@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct time {
+int hora;
+int min;
+int seg;
+
+};
+
+struct time tempo;
+
+int qtdTempo_seg(int);
+int read_time(int,int,int);
+
+int main(){
+
+
+        printf("Informe tempo em segundos: ");
+        scanf("%d",&tempo.seg);
+
+        printf("O tempo eh %d ",qtdTempo_seg(tempo.seg));
+
+
+        printf("\nTempo em hora / min / segundo: ");
+        scanf("%d %d %d",&tempo.hora, &tempo.min, &tempo.seg);
+
+
+        printf("O tempo convertido em segundos eh %d ",read_time(tempo.hora,tempo.min,tempo.seg));
+
+}
+
+int qtdTempo_seg(int seg){
+
+        tempo.hora = seg /3600;
+        tempo.min = (seg-(tempo.hora*3600))/60;
+        seg = seg - (tempo.hora*3600)-(tempo.min*60);
+
+return seg;
+}
+
+int read_time(int hora,int min,int seg){
+
+        int totalseg;
+
+       return totalseg = (3600*hora) + (60*min) + seg;
+}
+
+
