@@ -1,0 +1,66 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main()
+{
+
+
+    int qtd,t=0;
+    printf("Quantidade de criancas: ");
+    scanf("%d",&qtd);
+    int vet[qtd];
+
+    while(t !=qtd)
+    {
+
+        printf("Informe a nota %d: ",t);
+        scanf("%d",&vet[t]);
+
+        t++;
+    }
+
+    int i,j,aux=0,cont=0;
+
+//metodo bubblesort
+
+    for(i=0; i < qtd; i++)
+    {
+        for(j+1; j < qtd; j++)
+        {
+            if ( vet[i] > vet[j] )
+            {
+                aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+            }
+        }
+    }
+
+    for(i=0; i < qtd; i++)
+    {
+
+        if(vet[i] == 6)
+        {
+
+            cont++;
+        }
+
+        if(vet[i] == 8)
+        {
+
+            cont+=2;
+        }
+
+        if(vet[i] == 9)
+        {
+
+            cont+=3;
+        }
+
+    }
+
+    printf("Sera distribuido no minimo:  %d doce(s)",cont);
+
+}
+
+
