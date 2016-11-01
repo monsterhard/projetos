@@ -11,10 +11,10 @@ struct banda
     int ranking;
 };
 
-struct banda bandas[4];
+struct banda bandas[5];
 
-int preencherBanda(void);//
-void printaBanda(void);//
+int preencher_Banda(void);//
+int solicita_Banda(void);//
 void menu(void);//
 void funcaoRanking(void);//
 void estilomusica(void);//
@@ -48,7 +48,7 @@ void menu()
         case 1:
 
 
-            if (preencherBanda()==0)
+            if (preencher_Banda()==0)
             {
 
                 printf("\n\tCadastrado com sucesso!!\n");
@@ -57,15 +57,15 @@ void menu()
             else
             {
 
-
                 printf("\n\n\tLista cheia!!\n");
             }
 
-
-
             break;
+
         case 2:
-           // printaBanda();//05
+
+            solicita_Banda();
+
             break;
         case 3:
             //funcaoRanking(); //02
@@ -82,19 +82,29 @@ void menu()
 }
 
 
-int preencherBanda(){
+int preencher_Banda(){
 
-FILE *file = fileOpen(NOMEARQUIVO,"ab");
+    FILE *file = fileOpen(NOMEARQUIVO,"ab");
 
     int r;
 
     r = list_cadastros();
 
-    if(r < 4)
+    if(r < 5)
+
     {
 
+           printf("\n\tInforme o nome da banda: ");
+           scanf("%s",&bandas[0].nome);
 
-        //preencher os dados
+           printf("\n\tInforme o estilo da banda: ");
+           scanf("%s",&bandas[0].estilo);
+
+           printf("\n\tInforme o numero de integrantes: ");
+           scanf("%d",&bandas[0].numero_integrantes);
+
+           printf("\n\tInforme a posicao do ranking: ");
+           scanf("%d",&bandas[0].ranking);
 
 
 
@@ -108,10 +118,39 @@ FILE *file = fileOpen(NOMEARQUIVO,"ab");
     fclose(file);
     return 1;
 
+ }
+
+int solicita_Banda(){
+
+    int i,pos;
+
+    printf("\n\tInforme a posicao do ranking (entre 1 a 5): ");
+    scanf("%d",&pos);
 
 
+       while(pos < 1 || pos > 5){
+
+            printf("\n\tPosicao invalida, informe novamente(entre 1 a 5): ");
+            scanf("%d",&pos);
+       }
+
+    for(i=0; i < list_cadastros(); i++)
+
+    {
+
+        if(bandas[i].ranking==pos){
+
+            printf("\n\tNome: %s ",bandas[i].nome);
+
+        }
 
     }
+
+
+
+return 0;
+
+}
 
 
 
@@ -128,11 +167,10 @@ FILE* fileOpen(char nome[],char modo[])
 
 int list_cadastros()
 {
-
     int result;
 
     FILE *file = fileOpen(NOMEARQUIVO,"rb");
 
-    return  result = fread(&bandas[0],sizeof(struct banda),4,file);
+    return  result = fread(&bandas[0],sizeof(struct banda),5,file);
 
 }
